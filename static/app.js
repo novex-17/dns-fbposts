@@ -192,7 +192,7 @@ function renderItemGrid() {
         </label>
         
         <div class="action-btn-group">
-          <a href="/api/download-single-image?url=${encodeURIComponent(item.image_url)}" class="btn-secondary" style="text-align: center; text-decoration: none;" download>📥 เซฟรูปภาพ</a>
+          <a href="${item.image_url}" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none;">📥 เปิดรูปเพื่อบันทึก (กดค้าง)</a>
           <button class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" onclick="copyItemCaption(${index})">📋 คัดลอกข้อความรูปนี้</button>
         </div>
       </div>
