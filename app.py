@@ -53,10 +53,14 @@ def download_single_image(img_url):
         print(f"Error downloading image {img_url}: {e}")
     return None
 
-@app.route('/api/download-single-image', methods=['POST'])
+@app.route('/api/download-single-image', methods=['GET', 'POST'])
 def api_download_single_image():
-    data = request.json or {}
-    img_url = data.get('image_url', '')
+    if request.method == 'POST':
+        data = request.json or {}
+        img_url = data.get('image_url', '')
+    else:
+        img_url = request.args.get('url', '')
+        
     if not img_url:
         return jsonify({'error': 'No image_url provided'}), 400
     
@@ -65,7 +69,8 @@ def api_download_single_image():
         return send_file(
             io.BytesIO(img_bytes),
             mimetype='image/jpeg',
-            as_attachment=False
+            as_attachment=True,
+            download_name='dns_golf_image.jpg'
         )
     return jsonify({'error': 'Could not download image'}), 500
 
