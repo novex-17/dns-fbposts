@@ -53,6 +53,22 @@ def download_single_image(img_url):
         print(f"Error downloading image {img_url}: {e}")
     return None
 
+@app.route('/api/download-single-image', methods=['POST'])
+def api_download_single_image():
+    data = request.json or {}
+    img_url = data.get('image_url', '')
+    if not img_url:
+        return jsonify({'error': 'No image_url provided'}), 400
+    
+    img_bytes = download_single_image(img_url)
+    if img_bytes:
+        return send_file(
+            io.BytesIO(img_bytes),
+            mimetype='image/jpeg',
+            as_attachment=False
+        )
+    return jsonify({'error': 'Could not download image'}), 500
+
 @app.route('/api/download-zip', methods=['POST'])
 def api_download_zip():
     data = request.json or {}

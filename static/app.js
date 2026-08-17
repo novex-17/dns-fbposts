@@ -191,8 +191,8 @@ function renderItemGrid() {
           <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleItemSelection(${index}, this.checked)" /> รวมในโพสต์นี้
         </label>
         
-        <div style="display: flex; gap: 6px;">
-          <a href="${item.image_url}" target="_blank" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px; text-decoration: none;">🖼️ รูปเต็ม</a>
+        <div class="action-btn-group">
+          <button class="btn-secondary" onclick="saveImageToPhotos(${index})">📥 เซฟรูปภาพ</button>
           <button class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" onclick="copyItemCaption(${index})">📋 คัดลอกข้อความรูปนี้</button>
         </div>
       </div>
@@ -250,6 +250,47 @@ function copyAllCombinedCaptions() {
   
   navigator.clipboard.writeText(combined);
   showToast('คัดลอกข้อความทั้งหมดเรียบร้อยแล้ว!');
+}
+
+async function saveImageToPhotos(index) {
+  const item = currentData.items[index];
+  showToast('กำลังโหลดรูปภาพเพื่อบันทึก...');
+  
+  try {
+    const res = await fetch('/api/download-single-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_url: item.image_url })
+    });
+    
+    if (!res.ok) throw new Error('โหลดรูปล้มเหลว');
+    
+    const blob = await res.blob();
+    const cleanTitle = item.description ? item.description.split('\n')[0].substring(0, 30).replace(/[^\w\s-]/g, '').trim() : 'product';
+    const fileName = `dns_golf_${cleanTitle}.jpg`;
+    
+    const file = new File([blob], fileName, { type: 'image/jpeg' });
+    
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: fileName
+      });
+      // The user handles it in the native share sheet
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      showToast('ดาวน์โหลดรูปภาพเรียบร้อย!');
+    }
+  } catch (err) {
+    alert('เกิดข้อผิดพลาดในการบันทึกรูป: ' + err.message);
+  }
 }
 
 async function downloadZipPackage() {

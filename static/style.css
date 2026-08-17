@@ -601,6 +601,11 @@ header {
   gap: 8px;
 }
 
+.action-btn-group {
+  display: flex;
+  gap: 6px;
+}
+
 /* Toast */
 .toast {
   position: fixed;
@@ -638,5 +643,20 @@ header {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
+  }
+  .item-card-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .action-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .action-btn-group .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.9rem !important;
   }
 }
