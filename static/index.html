@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNS Golf Outlet - Facebook Post Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-area">
+        <div class="logo-icon">⛳</div>
+        <div class="logo-title">
+          <h1>DNS Golf Outlet</h1>
+          <p>Social Media Officer Daily Facebook Post Assistant</p>
+        </div>
+      </div>
+      <div class="status-badge">
+        <div class="pulse-dot"></div>
+        <span id="status-text">พร้อมใช้งาน</span>
+      </div>
+    </header>
+
+    <!-- Controls -->
+    <div class="control-card">
+      <div class="section-title">
+        <span>🛒</span> เลือกหมวดหมู่สินค้าที่ต้องการดึงข้อมูลประจำวัน:
+      </div>
+      
+      <div class="category-buttons" id="category-buttons">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="url-input-group">
+        <input type="url" id="category-url" class="url-input" value="https://dnsgolfoutlet.com/product-category/iron-set" placeholder="ระบุ URL หมวดหมู่สินค้า..." />
+      </div>
+
+      <div class="fetch-action-btns">
+        <button id="fetch-all-btn" class="fetch-btn" onclick="triggerScrape('all')">
+          <span class="btn-icon">⚡</span>
+          <span>ดึงสินค้าพร้อมขายทั้งหมด (All In-Stock)</span>
+        </button>
+
+        <button id="fetch-new-btn" class="fetch-btn-new" onclick="triggerScrape('new_only')">
+          <span class="btn-icon">🔥</span>
+          <span>ดึงเฉพาะสินค้ามาใหม่ล่าสุด (New Clubs Only)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div id="workspace" style="display: none;">
+      <!-- Action Banner -->
+      <div class="action-banner">
+        <div class="action-banner-text">
+          <h3 id="result-summary">ดึงข้อมูลสำเร็จ: 0 รายการ</h3>
+          <p id="result-subtext">รวมเฉพาะสินค้าที่ยังไม่ SOLD OUT พร้อมรูปภาพแรกและลิงค์รายละเอียด</p>
+        </div>
+        <div class="banner-btns">
+          <button class="btn-secondary" onclick="copyAllCombinedCaptions()">
+            📋 คัดลอกข้อความทั้งหมด
+          </button>
+          <button class="btn-primary" onclick="downloadZipPackage()">
+            📦 ดาวน์โหลดชุดรูป + ข้อความ (.ZIP)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-header">
+        <button class="tab-btn active" onclick="switchTab('tab-preview', event)">
+          📱 พรีวิวโพสต์ Facebook
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-items', event)">
+          🖼️ จัดการรายสินค้า & รูปภาพ (<span id="item-count-badge">0</span>)
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-template', event)">
+          ✍️ แก้ไขแคปชั่นหลักประจำวัน
+        </button>
+      </div>
+
+      <!-- Tab 1: Facebook Post Simulator -->
+      <div id="tab-preview" class="tab-content active">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
+          <button class="btn-secondary" onclick="copyMainCaption()">
+            📋 คัดลอกแคปชั่นหลักโพสต์ (Main Caption)
+          </button>
+        </div>
+
+        <div class="fb-simulator">
+          <div class="fb-header">
+            <div class="fb-user-info">
+              <div class="fb-avatar">DNS</div>
+              <div>
+                <div class="fb-name">Golf Outlet by DON and Sons</div>
+                <div class="fb-time">อัพเดทเมื่อสักครู่ · 🌎</div>
+              </div>
+            </div>
+            <div style="color: #b0b3b8; font-size: 20px;">•••</div>
+          </div>
+
+          <div class="fb-caption-area" id="fb-main-caption-preview">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="fb-photo-grid" id="fb-photo-grid-preview">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Item Cards & Photo Captions -->
+      <div id="tab-items" class="tab-content">
+        <div class="item-grid" id="item-grid-container">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Template Editor -->
+      <div id="tab-template" class="tab-content">
+        <div class="control-card">
+          <div class="section-title">
+            <span>✍️</span> แก้ไขแคปชั่นหลักสำหรับโพสต์ (Main Caption Template):
+          </div>
+          <textarea id="main-caption-editor" class="item-desc-textarea" style="min-height: 260px; font-size: 0.95rem;"></textarea>
+          <div style="display: flex; justify-content: flex-end; margin-top: 14px; gap: 10px;">
+            <button class="btn-secondary" onclick="updateMainCaptionFromEditor()">
+              💾 บันทึกการเปลี่ยนแปลง
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">คัดลอกข้อความเรียบร้อยแล้ว!</div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
